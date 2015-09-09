@@ -1,0 +1,79 @@
+#!/usr/bin/env node
+
+"use strict";
+
+var spawn = require('child_process').spawn,
+    exec = require('child_process').exec,
+    path = require('path'),
+    fs = require('fs'),
+    semverUtil = require('../lib/semver');
+    
+function exit(str) {
+  console.log([].slice.call(arguments).join(' ').red);
+  process.exit(-1);
+};
+
+function done(msg) {
+  console.log(msg);
+  process.exit(0);
+}
+
+var error = exit.bind(null, 'Error:');
+
+function getPkg() {
+  var pkg;
+  try {
+    pkg = JSON.parse(fs.readFileSync(path.resolve(process.cwd(), './package.json')));
+  } catch(e) {
+    error('Could not open a package.json.');
+  }
+  return pkg;
+};
+
+function getCurrentVersion() {
+  return getPkg().version;
+};
+
+var oldVersion = getCurrentVersion();
+
+if (!oldVersion) error('No version in package.json found.');
+var buildNumber = process.argv[2];
+if (!buildNumber) error("No build number supplied.");
+
+var semver = semverUtil.parseSemver(oldVersion);
+if(!semver) error("Could not parse version from package.json");
+var buildTag = semver.release;
+if(buildTag) {
+  //strip off everything after the first '.' (if present)
+  buildTag = buildTag.split('.')[0];
+} else {
+  buildTag = "SNAPSHOT";
+}
+semver.release = buildTag + '.' + buildNumber;
+var version = semverUtil.stringifySemver(semver);
+  
+// Run npm verison without tagging
+var npm = spawn('npm', ['--no-git-tag-version', 'version', version]);
+npm.stderr.pipe(process.stderr);
+
+npm.on('close', function (code) {
+  if (code !== 0) return error('npm version. Exiting.');
+  done(buildTag);
+  
+  /*
+  msg('Publishing to npm...');
+
+  // Publish to npm
+  var publish = spawn('npm', ['publish']);
+  publish.stdout.pipe(process.stdout);
+  publish.stderr.pipe(process.stderr);
+  publish.on('close', function (code) {
+    if (code !== 0) return error('npm publish. Exiting.');
+
+    success('Published to npm.');
+    done();
+
+  });
+  */
+});
+
