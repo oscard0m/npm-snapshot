@@ -8,17 +8,15 @@ var spawn = require('child_process').spawn,
     fs = require('fs'),
     semverUtil = require('../lib/semver');
     
-function exit(str) {
-  console.log([].slice.call(arguments).join(' ').red);
-  process.exit(-1);
-};
-
 function done(msg) {
   console.log(msg);
   process.exit(0);
 }
 
-var error = exit.bind(null, 'Error:');
+function error(msg) {
+  console.error(msg);
+  process.exit(-1);
+} 
 
 function getPkg() {
   var pkg;
