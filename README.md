@@ -1,32 +1,33 @@
-# npm-release
+# npm-snapshot
 
-A little script to help release `npm` modules. It:
-
-- Bumps the version in `package.json`
-- Commits 'Release vX.X.X-X'
-- Tags
-- Pushes the commit & tag (`git push && git push --tags`)
-- Releases to npm (with `npm publish`)
+A little script to help with prerelease `npm` modules. 
 
 ## Usage
 
-You must use `npm-release` in a folder with a `package.json` and a remote to push to.
+You must use `npm-snapshot` in a folder with a `package.json`.
 
-`npm-release 0.0.2`
+`npm-snapshot 245`
 
-It supports the same version options as `npm version`.
+The argument to this utility is a unique, monotonically increasing number (say, a build number from Travis or Shippable)
+that will be appended to the prerelease portion of the existing version. If there is no current prerelease portion of the 
+version, the string 'SNAPSHOT' will be used. Any existing prerelease portion will be preserved, up to the first '.'.
 
-`npm-release [<newversion> | major | minor | patch | build]`
+For example, given the version "1.2.4", calling
+  
+`npm-snapshot 245`
 
-And custom commit messages:
+will change the package.json to be "1.2.4-SNAPSHOT.245".
 
-`npm-release major -m "#yolo"`
+Additionally, the prerelease prefix is emitted on standard out. This is useful as a tag when publishing. For example:
 
-Finger-licking good!
+```bash
+BUILD_TAG = $(npm snapshot $BUILD_NUMBER)
+npm publish --tag BUILD_TAG
+```
 
 ## Install
 
-`npm install -g npm-release`
+`npm install -g npm-snapshot`
 
 ## License
 
