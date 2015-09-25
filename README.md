@@ -21,7 +21,7 @@ will change the package.json to be "1.2.4-SNAPSHOT.245".
 Additionally, the prerelease prefix is emitted on standard out. This is useful as a tag when publishing. For example:
 
 ```bash
-BUILD_TAG = $(npm snapshot $BUILD_NUMBER)
+BUILD_TAG = $(npm-snapshot $BUILD_NUMBER)
 npm publish --tag BUILD_TAG
 ```
 
