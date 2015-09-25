@@ -1,21 +1,18 @@
 {
-  "name": "@ojolabs/npm-snapshot",
+  "name": "npm-snapshot",
   "version": "1.0.1",
   "description": "Tiny tool for releasing npm prerelease snapshots.",
   "main": "index.js",
   "bin": {
     "npm-snapshot": "./bin/npm-snapshot"
   },
-  "author": "Tom Ashworth <tom@phuu.net>",
-  "contributors": [
-    "David Pratt <dpratt@ojolabs.com"
-  ],
+  "author": "David Pratt <david.pratt@gmail.com",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ojolabs/npm-snapshot.git"
+    "url": "https://github.com/dpratt/npm-snapshot.git"
   },
   "bugs": {
-    "url": "https://github.com/ojolabs/npm-snapshot/issues"
+    "url": "https://github.com/dpratt/npm-snapshot/issues"
   }
 }
