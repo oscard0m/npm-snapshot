@@ -1,6 +1,6 @@
 {
   "name": "npm-snapshot",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Tiny tool for releasing npm prerelease snapshots.",
   "author": "David Pratt <david.pratt@gmail.com",
   "license": "MIT",
@@ -18,5 +18,5 @@
   "main": "index.js",
   "bin": {
     "npm-snapshot": "./bin/npm-snapshot"
-  }  
+  }
 }
