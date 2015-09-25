@@ -8,11 +8,6 @@ var spawn = require('child_process').spawn,
     fs = require('fs'),
     semverUtil = require('../lib/semver');
     
-function done(msg) {
-  console.log(msg);
-  process.exit(0);
-}
-
 function error(msg) {
   console.error(msg);
   process.exit(-1);
@@ -40,38 +35,25 @@ if (!buildNumber) error("No build number supplied.");
 
 var semver = semverUtil.parseSemver(oldVersion);
 if(!semver) error("Could not parse version from package.json");
-var buildTag = semver.release;
-if(buildTag) {
+let prereleaseTag = semver.release;
+if(prereleaseTag) {
   //strip off everything after the first '.' (if present)
-  buildTag = buildTag.split('.')[0];
+  prereleaseTag = prereleaseTag.split('.')[0];
 } else {
-  buildTag = "SNAPSHOT";
+  prereleaseTag = "SNAPSHOT";
 }
-semver.release = buildTag + '.' + buildNumber;
+
+semver.release = prereleaseTag + '.' + buildNumber;
 var version = semverUtil.stringifySemver(semver);
-  
+const tag = semver.version + "-" + prereleaseTag;
+
 // Run npm verison without tagging
 var npm = spawn('npm', ['--no-git-tag-version', 'version', version]);
 npm.stderr.pipe(process.stderr);
 
 npm.on('close', function (code) {
   if (code !== 0) return error('npm version. Exiting.');
-  done(buildTag);
-  
-  /*
-  msg('Publishing to npm...');
-
-  // Publish to npm
-  var publish = spawn('npm', ['publish']);
-  publish.stdout.pipe(process.stdout);
-  publish.stderr.pipe(process.stderr);
-  publish.on('close', function (code) {
-    if (code !== 0) return error('npm publish. Exiting.');
-
-    success('Published to npm.');
-    done();
-
-  });
-  */
+  process.stdout.write(tag);
+  process.exit(0);
 });
 
