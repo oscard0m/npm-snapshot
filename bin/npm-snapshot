@@ -45,7 +45,7 @@ semver.release = prereleaseTag + '.' + buildNumber;
 const version = semverUtil.stringifySemver(semver);
 
 // Run npm verison without tagging
-const npm = spawn('npm', ['--no-git-tag-version', 'version', version]);
+const npm = spawn(/^win/.test(process.platform) ? 'npm.cmd' : 'npm', ['--no-git-tag-version', 'version', version]);
 npm.stderr.pipe(process.stderr);
 
 npm.on('close', function (code) {
