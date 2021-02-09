@@ -29,6 +29,7 @@ const oldVersion = getCurrentVersion();
 
 if (!oldVersion) error('No version in package.json found.');
 const buildNumber = process.argv[2];
+const customPrereleaseTag = process.argv[3];
 if (!buildNumber) error("No build number supplied.");
 
 const semver = semverUtil.parseSemver(oldVersion);
@@ -37,6 +38,8 @@ let prereleaseTag = semver.release;
 if(prereleaseTag) {
   //strip off everything after the first '.' (if present)
   prereleaseTag = prereleaseTag.split('.')[0];
+}  else if (customPrereleaseTag) {
+  prereleaseTag = customPrereleaseTag;
 } else {
   prereleaseTag = "SNAPSHOT";
 }
