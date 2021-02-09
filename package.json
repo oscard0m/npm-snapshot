@@ -6,10 +6,10 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/dpratt/npm-snapshot.git"
+    "url": "https://github.com/oscard0m/npm-snapshot.git"
   },
   "bugs": {
-    "url": "https://github.com/dpratt/npm-snapshot/issues"
+    "url": "https://github.com/oscard0m/npm-snapshot/issues"
   },
   "engines": {
     "node": ">= 4.0.0",
