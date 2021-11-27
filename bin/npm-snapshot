@@ -2,58 +2,63 @@
 
 "use strict";
 
-const spawn = require('child_process').spawn,
-    exec = require('child_process').exec,
-    path = require('path'),
-    fs = require('fs'),
-    semverUtil = require('../lib/semver');
-    
+const spawn = require("child_process").spawn,
+  exec = require("child_process").exec,
+  path = require("path"),
+  fs = require("fs"),
+  semverUtil = require("../lib/semver");
+
 function error(msg) {
   console.error(msg);
   process.exit(-1);
-} 
+}
 
 function getPkg() {
   try {
-    return JSON.parse(fs.readFileSync(path.resolve(process.cwd(), './package.json')));
-  } catch(e) {
-    error('Could not open a package.json.');
+    return JSON.parse(
+      fs.readFileSync(path.resolve(process.cwd(), "./package.json"))
+    );
+  } catch (e) {
+    error("Could not open a package.json.");
   }
-};
+}
 
 function getCurrentVersion() {
   return getPkg().version;
-};
+}
 
 const oldVersion = getCurrentVersion();
 
-if (!oldVersion) error('No version in package.json found.');
+if (!oldVersion) error("No version in package.json found.");
 const buildNumber = process.argv[2];
 const customPrereleaseTag = process.argv[3];
 if (!buildNumber) error("No build number supplied.");
 
 const semver = semverUtil.parseSemver(oldVersion);
-if(!semver) error("Could not parse version from package.json");
+if (!semver) error("Could not parse version from package.json");
 let prereleaseTag = semver.release;
 if (customPrereleaseTag) {
   prereleaseTag = customPrereleaseTag;
 } else if (prereleaseTag) {
   //strip off everything after the first '.' (if present)
-  prereleaseTag = prereleaseTag.split('.')[0];
+  prereleaseTag = prereleaseTag.split(".")[0];
 } else {
   prereleaseTag = "SNAPSHOT";
 }
 
-semver.release = prereleaseTag + '.' + buildNumber;
+semver.release = prereleaseTag + "." + buildNumber;
 const version = semverUtil.stringifySemver(semver);
 
 // Run npm verison without tagging
-const npm = spawn(/^win/.test(process.platform) ? 'npm.cmd' : 'npm', ['--no-git-tag-version', 'version', version]);
+const npm = spawn(/^win/.test(process.platform) ? "npm.cmd" : "npm", [
+  "--no-git-tag-version",
+  "version",
+  version,
+]);
 npm.stderr.pipe(process.stderr);
 
-npm.on('close', function (code) {
-  if (code !== 0) return error('npm version. Exiting.');
+npm.on("close", function (code) {
+  if (code !== 0) return error("npm version. Exiting.");
   process.stdout.write(prereleaseTag);
   process.exit(0);
 });
-
