@@ -4,3 +4,4 @@ node_modules
 # JetBrains project files
 .idea
 *.iml
+.vscode
