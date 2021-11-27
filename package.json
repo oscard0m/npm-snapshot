@@ -2,7 +2,7 @@
   "name": "npm-snapshot",
   "version": "1.1.0",
   "description": "Tiny tool for releasing npm prerelease snapshots.",
-  "author": "David Pratt <david.pratt@gmail.com",
+  "author": "Oscar Dominguez <dominguez.celada@gmail.com>",
   "license": "MIT",
   "repository": {
     "type": "git",
