@@ -49,6 +49,8 @@ if (customPrereleaseTag) {
 semver.release = prereleaseTag + "." + buildNumber;
 const version = semverUtil.stringifySemver(semver);
 
+if (!version) error("Could not create a valid version string.");
+
 // Run npm verison without tagging
 const npm = spawn(/^win/.test(process.platform) ? "npm.cmd" : "npm", [
   "--no-git-tag-version",
